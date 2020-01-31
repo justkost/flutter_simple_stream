@@ -2,34 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/service_locator.dart';
 import 'package:flutter_app/services/CounterMessagebus.dart';
 
-class Counter extends StatefulWidget {
-  @override
-  _CounterState createState() => _CounterState();
-}
-
-class _CounterState extends State<Counter> {
-  CounterMessagebus _messageBus = locator<CounterMessagebus>();
-
-  int _current;
-
-  @override
-  void initState() {
-    _messageBus.idStream.listen(handleMessage);
-  }
-
-  void handleMessage(int current) {
-    setState(() {
-      _current = current;
-    });
-  }
+class Counter extends StatelessWidget {
+  final CounterMessagebus _messageBus = locator<CounterMessagebus>();
 
   @override
   Widget build(BuildContext context) {
-    return (
-      Text(
-        _current.toString(),
-        style: Theme.of(context).textTheme.display1,
-      )
+    return StreamBuilder<int>(
+      stream: _messageBus.idStream,
+      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+        return (
+          Text(
+            snapshot.data.toString(),
+            style: Theme.of(context).textTheme.display1,
+          )
+        );
+      }
     );
   }
 }

@@ -10,11 +10,19 @@ class IncrementBtn extends StatefulWidget {
 class _IncrementBtnState extends State<IncrementBtn> {
   CounterMessagebus _messageBus = locator<CounterMessagebus>();
 
-  int _current = 0;
+  int _current;
+
+  @override
+  void initState() {
+    _messageBus.idStream.listen(_handleMessage);
+  }
+
+  void _handleMessage(int current) {
+    _current = current;
+  }
 
   void _incrementCounter() {
-    ++_current;
-    _messageBus.broadcastCount(_current);
+    _messageBus.broadcastCount(_current + 1);
   }
 
   @override
